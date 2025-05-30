@@ -1,19 +1,28 @@
-# casoDeUso
 ```mermaid
+graph TD
+    subgraph Cliente
+        NavegadorWeb[Navegador Web]
+    end
 
-sequenceDiagram
-    participant Funcionário
-    participant Sistema
-    participant BancoDeDados
+    subgraph "Servidor Aplicação"
+        subgraph "VM Aplicativo Backend"
+            Backend[Aplicativo Backend]
+        end
+    end
 
-    Funcionário->>Sistema: Solicita acesso ao sistema
-    Sistema-->>Funcionário: Solicita login e senha
-    Funcionário->>Sistema: Envia credenciais
-    Sistema->>BancoDeDados: Valida credenciais
-    BancoDeDados-->>Sistema: Confirma autenticidade
-    Sistema-->>Funcionário: Interface com opções (menu)
+    subgraph "Servidor de Banco de Dados"
+        DB[(PostgreSQL)]
+    end
 
-    Funcionário->>Sistema: Seleciona "Consultar Feedback"
-    Sistema->>BancoDeDados: Consulta avaliações recebidas
-    BancoDeDados-->>Sistema: Retorna lista de feedbacks
-    Sistema-->>Funcionário: Exibe feedbacks com detalhes
+    subgraph "Servidor de Arquivos"
+        Ajuda[Ajuda]
+    end
+
+    subgraph "Servidor de Autenticação"
+        Keycloak[Keycloak]
+    end
+
+    NavegadorWeb -- HTTP/HTTPS --> Backend
+    Backend -- "REST API" --> Ajuda
+    Backend -- "OAuth2.0" --> Keycloak
+    Backend -- "API PostgreSQL" --> DB
